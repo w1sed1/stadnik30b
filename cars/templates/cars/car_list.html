@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Каталог авто</title>
+  </head>
+  <body>
+    <h1>Каталог автомобілів</h1>
+    <ul>
+      {% for car in cars %}
+      <li>
+        <a href="{% url 'car_detail' car.pk %}"
+          >{{ car.brand }} {{ car.model }} ({{ car.year }})</a
+        >
+        - {{ car.price_per_day }} грн/день
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
