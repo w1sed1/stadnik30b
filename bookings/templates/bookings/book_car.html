@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2 style="margin-top: 0; color: var(--text-light);">Бронювання: {{ car.brand }} {{ car.model }}</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding: 1rem; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(239, 68, 68, 0.3);">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" id="bookingForm" style="display: flex; flex-direction: column; gap: 1rem;">
+        {% csrf_token %}
+        <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold; color: var(--text-gray);">Початок оренди:</label>
+            <input type="date" id="start_date" name="start_date" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-dark); color: var(--text-light); box-sizing: border-box; color-scheme: dark;">
+        </div>
+        <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold; color: var(--text-gray);">Кінець оренди:</label>
+            <input type="date" id="end_date" name="end_date" required style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-dark); color: var(--text-light); box-sizing: border-box; color-scheme: dark;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Забронювати</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startInput = document.getElementById('start_date');
+        const endInput = document.getElementById('end_date');
+        const form = document.getElementById('bookingForm');
+        
+        const today = new Date().toISOString().split('T')[0];
+        startInput.setAttribute('min', today);
+        endInput.setAttribute('min', today);
+
+        startInput.addEventListener('change', function() {
+            endInput.setAttribute('min', this.value);
+            if(endInput.value && endInput.value < this.value) {
+                endInput.value = this.value;
+            }
+        });
+
+        form.addEventListener('submit', function(e) {
+            if (startInput.value > endInput.value) {
+                e.preventDefault();
+                alert('Дата завершення не може бути раніше дати початку!');
+            }
+        });
+    });
+</script>
+{% endblock %}

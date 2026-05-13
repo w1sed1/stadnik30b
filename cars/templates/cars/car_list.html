@@ -1,19 +1,48 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Каталог авто</title>
-  </head>
-  <body>
-    <h1>Каталог автомобілів</h1>
-    <ul>
-      {% for car in cars %}
-      <li>
-        <a href="{% url 'car_detail' car.pk %}"
-          >{{ car.brand }} {{ car.model }} ({{ car.year }})</a
-        >
-        - {{ car.price_per_day }} грн/день
-      </li>
-      {% endfor %}
-    </ul>
-  </body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<header style="margin-bottom: 3rem; text-align: center;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--text-light);">Наш автопарк</h1>
+    <p style="color: var(--text-gray); font-size: 1.1rem;">Виберіть автомобіль для вашої подорожі</p>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+    {% for car in cars %}
+    <div class="card" style="display: flex; flex-direction: column; height: 100%; margin-bottom: 0;">
+        {% if car.image %}
+            <img src="{{ car.image.url }}" alt="{{ car.brand }}" style="width: 100%; height: 230px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem; transition: filter 0.3s ease;">
+        {% else %}
+            <div style="width: 100%; height: 230px; background: var(--bg-dark); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--text-gray);">
+                Немає фото
+            </div>
+        {% endif %}
+        
+        <div style="flex-grow: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.4rem; color: var(--text-light);">{{ car.brand }}</h3>
+                    <p style="margin: 0; color: var(--text-gray);">{{ car.model }} ({{ car.year }})</p>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">{{ car.price_per_day }}</span>
+                    <span style="font-size: 0.9rem; color: var(--text-gray); display: block;">грн/день</span>
+                </div>
+            </div>
+
+            <div style="font-size: 0.85rem; color: var(--text-light); background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; border: 1px solid var(--border);">
+                <div>⚙️ {{ car.engine }}</div>
+                <div>🕹️ {{ car.transmission }}</div>
+                <div>⛽ {{ car.fuel_type }}</div>
+                <div>🪑 {{ car.seats }} місць</div>
+            </div>
+
+            <p style="color: var(--text-gray); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                {{ car.description|truncatewords:20 }}
+            </p>
+        </div>
+        
+        <a href="{% url 'car_detail' car.id %}" class="btn btn-primary" style="display: block; width: 100%; box-sizing: border-box;">Деталі оренди</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

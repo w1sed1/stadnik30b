@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Вхід{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 400px; margin: 4rem auto;">
+    <h2 style="text-align: center; margin-top: 0; margin-bottom: 2rem;">Вхід в систему</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Увійти</button>
+    </form>
+</div>
+{% endblock %}

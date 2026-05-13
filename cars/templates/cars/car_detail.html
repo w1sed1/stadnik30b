@@ -1,14 +1,27 @@
-<!doctype html>
-<html>
-  <head>
-    <title>{{ car.brand }} {{ car.model }}</title>
-  </head>
-  <body>
-    <h1>{{ car.brand }} {{ car.model }} ({{ car.year }})</h1>
-    <p>{{ car.description }}</p>
-    <p>Ціна: {{ car.price_per_day }} грн/день</p>
-    <a href="{% url 'book_car' car.pk %}">Забронювати</a>
-    <br /><br />
-    <a href="{% url 'car_list' %}">Назад до каталогу</a>
-  </body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="display: flex; gap: 2rem; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 300px;">
+        {% if car.image %}
+            <img src="{{ car.image.url }}" alt="{{ car.brand }}" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);">
+        {% endif %}
+    </div>
+    <div style="flex: 1; min-width: 300px;">
+        <h1 style="margin-top: 0; color: var(--text-light);">{{ car.brand }} {{ car.model }}</h1>
+        <p style="font-size: 1.2rem; color: var(--text-gray);">Рік випуску: {{ car.year }}</p>
+        <p style="font-size: 2rem; font-weight: bold; color: var(--primary); margin: 1rem 0;">{{ car.price_per_day }} грн/день</p>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.95rem; border: 1px solid var(--border);">
+            <div><strong style="color: var(--text-gray);">Двигун:</strong> {{ car.engine }}</div>
+            <div><strong style="color: var(--text-gray);">Коробка:</strong> {{ car.transmission }}</div>
+            <div><strong style="color: var(--text-gray);">Паливо:</strong> {{ car.fuel_type }}</div>
+            <div><strong style="color: var(--text-gray);">Пробіг:</strong> {{ car.mileage }} км</div>
+            <div><strong style="color: var(--text-gray);">Місць:</strong> {{ car.seats }}</div>
+        </div>
+
+        <p style="line-height: 1.6; margin-bottom: 2rem; color: var(--text-gray);">{{ car.description }}</p>
+        <a href="{% url 'book_car' car.id %}" class="btn btn-primary" style="display: inline-block;">Перейти до бронювання</a>
+    </div>
+</div>
+{% endblock %}

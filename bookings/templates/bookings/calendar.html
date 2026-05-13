@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Календар бронювань{% endblock %}
+
+{% block content %}
+<style>
+    .cal-day {
+        padding: 10px; 
+        border-radius: 8px; 
+        text-align: center;
+        border: 1px solid var(--border);
+        min-height: 85px;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    .cal-day:hover {
+        transform: scale(1.05);
+        z-index: 10;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
+    }
+    .cal-day.muted {
+        opacity: 0.3;
+    }
+    .cal-day.has-bookings {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    .cal-day.free {
+        background-color: rgba(34, 197, 94, 0.1); 
+        border-color: rgba(34, 197, 94, 0.3);
+    }
+    .cal-header {
+        display: grid; 
+        grid-template-columns: repeat(7, 1fr); 
+        gap: 10px; 
+        text-align: center; 
+        margin-bottom: 10px; 
+        font-weight: bold; 
+        color: var(--text-gray);
+    }
+    .cal-grid {
+        display: grid; 
+        grid-template-columns: repeat(7, 1fr); 
+        gap: 10px;
+    }
+    .booked-car {
+        font-size: 0.7rem;
+        background-color: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        padding: 2px 4px;
+        border-radius: 4px;
+        margin-top: 4px;
+        display: inline-block;
+        word-break: break-word;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+</style>
+
+<div class="card" style="padding: 2rem;">
+    <h1 style="margin-top: 0; margin-bottom: 2rem; text-align: center; color: var(--text-light);">Календар завантаженості автопарку ({{ today|date:"F Y" }})</h1>
+    
+    <div class="cal-header">
+        <div>Пн</div><div>Вв</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Нд</div>
+    </div>
+    
+    <div class="cal-grid">
+        {% for week in calendar_data %}
+            {% for day in week %}
+                <div class="cal-day {% if not day.is_current_month %}muted{% endif %} {% if day.booked_cars %}has-bookings{% else %}free{% endif %}">
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: var(--text-light);">{{ day.day }}</div>
+                    <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center;">
+                        {% if day.booked_cars %}
+                            {% for car in day.booked_cars %}
+                                <div class="booked-car">{{ car }}</div>
+                            {% endfor %}
+                        {% else %}
+                            <div style="font-size: 0.8rem; color: #4ade80; margin-top: 4px;">Вільно</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
